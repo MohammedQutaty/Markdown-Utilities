@@ -1,0 +1,502 @@
+/* ==========================================================================
+   Author : Mohammad Qutaty
+   Create date : 2026-10-09
+   Description : Markdown presentation layer,presentation layer for project 
+            markdown documents.
+            Paired with the house markdown rules: title, badges, TOC, [↑ Top] links,
+            live references, and an end-of-file summary.
+   ========================================================================== */
+
+:root {
+    color-scheme: light dark;
+
+    /* Surfaces */
+    --surface: #ffffff;
+    --surface-sunken: #f5f6f8;
+    --surface-raised: #ffffff;
+    --border: #d8dce3;
+    --border-strong: #b9c0cc;
+
+    /* Text */
+    --text: #1f2430;
+    --text-muted: #5b6472;
+    --text-subtle: #8a93a2;
+
+    /* Accents */
+    --link: #1a56c4;
+    --link-hover: #0f3f94;
+
+    /* Badge palette */
+    --gray-label: #6b7280;
+    --gray-value: #1f2430;
+    --gray-surface: #eef0f3;
+
+    --blue-label: #1a56c4;
+    --blue-value: #0f3f94;
+    --blue-surface: #e6effc;
+
+    --green-label: #1a7f4b;
+    --green-value: #0f5c34;
+    --green-surface: #e4f5ec;
+
+    --orange-label: #b45a06;
+    --orange-value: #8a4404;
+    --orange-surface: #fdefe0;
+
+    /* Metrics */
+    --radius: 10px;
+    --radius-sm: 6px;
+    --gap: 1rem;
+    --measure: 100%;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --surface: #14171d;
+        --surface-sunken: #1b1f27;
+        --surface-raised: #1e232c;
+        --border: #2e3542;
+        --border-strong: #414b5c;
+
+        --text: #e6e9ef;
+        --text-muted: #a2abbb;
+        --text-subtle: #79839a;
+
+        --link: #6ea8fe;
+        --link-hover: #9ec5ff;
+
+        --gray-label: #9aa3b2;
+        --gray-value: #e6e9ef;
+        --gray-surface: #242a34;
+
+        --blue-label: #6ea8fe;
+        --blue-value: #a9cbff;
+        --blue-surface: #17253a;
+
+        --green-label: #4fca8b;
+        --green-value: #97e5bd;
+        --green-surface: #132a1f;
+
+        --orange-label: #eaa35c;
+        --orange-value: #f5c48d;
+        --orange-surface: #2c2114;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   Base
+   -------------------------------------------------------------------------- */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0 auto;
+    padding: 2.5rem 1.25rem 4rem;
+    max-width: calc(var(--measure) + 8rem);
+    font-family:
+        "Segoe UI",
+        system-ui,
+        -apple-system,
+        "Helvetica Neue",
+        sans-serif;
+    font-size: 16px;
+    line-height: 1.65;
+    color: var(--text);
+    background: var(--surface);
+    -webkit-text-size-adjust: 100%;
+}
+
+/* --------------------------------------------------------------------------
+   Headings
+   -------------------------------------------------------------------------- */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    margin: 2.25rem 0 0.75rem;
+    line-height: 1.25;
+    font-weight: 650;
+    letter-spacing: -0.01em;
+    color: var(--text);
+    scroll-margin-top: 1.5rem;
+}
+
+h1 {
+    margin-top: 0;
+    padding-bottom: 0.5rem;
+    font-size: 2rem;
+    border-bottom: 2px solid var(--border-strong);
+}
+
+h2 {
+    padding-bottom: 0.3rem;
+    font-size: 1.45rem;
+    border-bottom: 1px solid var(--border);
+}
+
+h3 {
+    font-size: 1.2rem;
+}
+h4 {
+    font-size: 1.05rem;
+}
+h5,
+h6 {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+}
+
+p {
+    margin: 0 0 1rem;
+}
+
+/* --------------------------------------------------------------------------
+   Links — every reference in a project document is expected to be live
+   -------------------------------------------------------------------------- */
+
+a {
+    color: var(--link);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition:
+        color 0.15s ease,
+        border-color 0.15s ease;
+}
+
+a:hover,
+a:focus-visible {
+    color: var(--link-hover);
+    border-bottom-color: currentColor;
+}
+
+a:focus-visible {
+    outline: 2px solid var(--link);
+    outline-offset: 2px;
+    border-radius: 2px;
+}
+
+/* --------------------------------------------------------------------------
+   Lists
+   -------------------------------------------------------------------------- */
+
+ul,
+ol {
+    margin: 0 0 1rem;
+    padding-left: 1.5rem;
+}
+
+li {
+    margin: 0.3rem 0;
+}
+
+li::marker {
+    color: var(--text-subtle);
+}
+
+/* Nested list items stay tight so rule lists read as one block per section. */
+li > ul,
+li > ol {
+    margin: 0.3rem 0 0.5rem;
+}
+
+/* --------------------------------------------------------------------------
+   Code
+   -------------------------------------------------------------------------- */
+
+code,
+kbd,
+samp,
+pre {
+    font-family: "Cascadia Mono", "Consolas", ui-monospace, "SF Mono", monospace;
+    font-size: 0.9em;
+}
+
+code {
+    padding: 0.15em 0.4em;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--surface-sunken);
+    color: var(--text);
+}
+
+pre {
+    margin: 0 0 1rem;
+    padding: 1rem;
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface-sunken);
+    line-height: 1.5;
+}
+
+pre code {
+    padding: 0;
+    border: 0;
+    background: none;
+}
+
+/* --------------------------------------------------------------------------
+   Blockquote — used for the fill-in prompts
+   -------------------------------------------------------------------------- */
+
+blockquote {
+    margin: 0 0 1rem;
+    padding: 0.75rem 1rem;
+    border-left: 4px solid var(--border-strong);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    background: var(--surface-sunken);
+    color: var(--text-muted);
+}
+
+blockquote > :last-child {
+    margin-bottom: 0;
+}
+
+/* --------------------------------------------------------------------------
+   Tables
+   -------------------------------------------------------------------------- */
+
+table {
+    width: 100%;
+    margin: 0 0 1.25rem;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+}
+
+th,
+td {
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--border);
+    text-align: left;
+    vertical-align: top;
+}
+
+th {
+    background: var(--surface-sunken);
+    font-weight: 650;
+}
+
+tbody tr:nth-child(even) {
+    background: color-mix(in srgb, var(--surface-sunken) 45%, transparent);
+}
+
+/* --------------------------------------------------------------------------
+   Media — mermaid diagrams and wireframes
+   -------------------------------------------------------------------------- */
+
+img,
+svg,
+figure > pre {
+    max-width: 100%;
+    height: auto;
+}
+
+figure {
+    margin: 0 0 1.25rem;
+}
+
+figcaption {
+    margin-top: 0.5rem;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+hr {
+    height: 1px;
+    margin: 2rem 0;
+    border: 0;
+    background: var(--border);
+}
+
+/* --------------------------------------------------------------------------
+   Badges: <tag class="shield"><lab>..</lab><val>..</val></tag>
+   Custom elements are inline by default; give them a real box model.
+   -------------------------------------------------------------------------- */
+
+tag {
+    display: inline;
+}
+
+tag.shield {
+    display: inline-flex;
+    align-items: stretch;
+    margin: 0 0.15rem;
+    overflow: hidden;
+    vertical-align: middle;
+    border: 1px solid var(--border-strong);
+    border-radius: 999px;
+    background: var(--gray-surface);
+    line-height: 1.4;
+    white-space: nowrap;
+}
+
+tag.shield lab,
+tag.shield val {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    font-family:
+        "Segoe UI",
+        system-ui,
+        -apple-system,
+        sans-serif;
+    font-size: 0.78rem;
+    font-weight: 650;
+    letter-spacing: 0.02em;
+}
+
+/* Label sits on the tinted surface, value reads as the payload. */
+tag.shield lab {
+    background: var(--gray-surface);
+    color: var(--gray-label);
+    border-right: 1px solid var(--border);
+}
+
+tag.shield val {
+    background: var(--surface-raised);
+    color: var(--gray-value);
+}
+
+/* Neutral variant (default) */
+tag.shield.gray lab {
+    background: var(--gray-surface);
+    color: var(--gray-label);
+}
+tag.shield.gray val {
+    color: var(--gray-value);
+}
+
+/* Blue */
+tag.shield.blue lab {
+    background: var(--blue-surface);
+    color: var(--blue-label);
+}
+tag.shield.blue val {
+    color: var(--blue-value);
+}
+
+/* Green */
+tag.shield.green lab {
+    background: var(--green-surface);
+    color: var(--green-label);
+}
+tag.shield.green val {
+    color: var(--green-value);
+}
+
+/* Orange */
+tag.shield.orange lab {
+    background: var(--orange-surface);
+    color: var(--orange-label);
+}
+tag.shield.orange val {
+    color: var(--orange-value);
+}
+
+/* When the color class is placed on lab/val directly (as in the house
+   example), honor it rather than falling back to the neutral pair. */
+lab.gray {
+    color: var(--gray-label) !important;
+}
+val.gray {
+    color: var(--gray-value) !important;
+}
+lab.blue {
+    color: var(--blue-label) !important;
+}
+val.blue {
+    color: var(--blue-value) !important;
+}
+lab.green {
+    color: var(--green-label) !important;
+}
+val.green {
+    color: var(--green-value) !important;
+}
+lab.orange {
+    color: var(--orange-label) !important;
+}
+val.orange {
+    color: var(--orange-value) !important;
+}
+
+lab.blue,
+val.blue {
+    background: var(--blue-surface) !important;
+}
+lab.green,
+val.green {
+    background: var(--green-surface) !important;
+}
+lab.orange,
+val.orange {
+    background: var(--orange-surface) !important;
+}
+lab.gray,
+val.gray {
+    background: var(--gray-surface) !important;
+}
+
+/* Match the tinted fill to the label's text color. */
+tag.shield:has(> lab.blue) {
+    border-color: color-mix(in srgb, var(--blue-label) 40%, var(--border));
+}
+tag.shield:has(> lab.green) {
+    border-color: color-mix(in srgb, var(--green-label) 40%, var(--border));
+}
+tag.shield:has(> lab.orange) {
+    border-color: color-mix(in srgb, var(--orange-label) 40%, var(--border));
+}
+tag.shield:has(> lab.gray) {
+    border-color: color-mix(in srgb, var(--gray-label) 40%, var(--border));
+}
+
+/* --------------------------------------------------------------------------
+   Section anchors
+   -------------------------------------------------------------------------- */
+
+a[href^="#"] {
+    color: var(--link);
+}
+
+/* "[↑ Top]" style return links sit at the end of each section. */
+p a[href^="#"]:only-child,
+h2 + p > a[href^="#"]:only-child {
+    font-size: 0.85rem;
+    color: var(--text-subtle);
+}
+
+/* --------------------------------------------------------------------------
+   Print
+   -------------------------------------------------------------------------- */
+
+@media print {
+    body {
+        max-width: none;
+        padding: 0;
+        font-size: 11pt;
+    }
+
+    a {
+        color: inherit;
+        border-bottom: 0;
+    }
+
+    pre,
+    blockquote,
+    table,
+    tag.shield {
+        break-inside: avoid;
+    }
+
+    h1,
+    h2,
+    h3 {
+        break-after: avoid;
+    }
+}
